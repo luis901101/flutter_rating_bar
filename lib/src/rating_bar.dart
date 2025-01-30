@@ -32,6 +32,7 @@ class RatingBar extends StatefulWidget {
     /// Customizes the Rating Bar item with [RatingWidget].
     required RatingWidget ratingWidget,
     required this.onRatingUpdate,
+    this.onRatingUpdateFinish,
     this.glowColor,
     this.maxRating,
     this.textDirection,
@@ -61,6 +62,7 @@ class RatingBar extends StatefulWidget {
     required IndexedWidgetBuilder itemBuilder,
     IndexedWidgetBuilder? emptyItemBuilder,
     required this.onRatingUpdate,
+    this.onRatingUpdateFinish,
     this.glowColor,
     this.maxRating,
     this.textDirection,
@@ -86,6 +88,10 @@ class RatingBar extends StatefulWidget {
   ///
   /// [updateOnDrag] can be used to change the behaviour how the callback reports the update.
   final ValueChanged<double> onRatingUpdate;
+
+  /// Return rating when user finished dragging.
+  ///
+  final ValueChanged<double>? onRatingUpdateFinish;
 
   /// Defines color for glow.
   ///
@@ -297,6 +303,9 @@ class _RatingBarState extends State<RatingBar> {
     return IgnorePointer(
       ignoring: widget.ignoreGestures,
       child: GestureDetector(
+        onTapUp: (details) {
+          widget.onRatingUpdateFinish?.call(_rating);
+        },
         onTapDown: (details) {
           double value;
           if (index == 0 && (_rating == 1 || _rating == 0.5)) {
@@ -393,6 +402,7 @@ class _RatingBarState extends State<RatingBar> {
   void _onDragEnd(DragEndDetails details) {
     _glow.value = false;
     widget.onRatingUpdate(iconRating);
+    widget.onRatingUpdateFinish?.call(iconRating);
     iconRating = 0.0;
   }
 }

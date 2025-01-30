@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
         appBarTheme: AppBarTheme(
           titleTextStyle: Theme.of(context)
               .textTheme
-              .headline6
+              .headlineSmall
               ?.copyWith(color: Colors.white),
         ),
       ),
